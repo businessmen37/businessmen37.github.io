@@ -36,14 +36,19 @@
   ul.included{list-style:none; margin-top:16px;}
   ul.included li{font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:10px;}
   ul.included li:before{content:"—"; color:var(--gold);}
-  button.pay{
-    width:100%; padding:16px; border:none; border-radius:999px; background:var(--gold); color:#1A1305;
+  button.pay, a.pay{
+    width:100%; padding:17px; border:none; border-radius:999px; background:var(--gold); color:#1A1305;
     font-size:16px; font-weight:700; cursor:pointer; font-family:'Inter'; margin-top:8px;
-    transition:transform .15s;
+    transition:transform .15s; display:flex; align-items:center; justify-content:center;
+    text-align:center; text-decoration:none; line-height:1;
   }
-  button.pay:hover{transform:translateY(-1px);}
+  button.pay:hover, a.pay:hover{transform:translateY(-1px);}
+  .icon-row{display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;}
+  .pm-icon{height:24px; width:38px; border-radius:4px; box-shadow:0 0 0 1px var(--line);}
   .fine{font-size:12.5px; color:var(--text-muted); text-align:center; margin-top:16px;}
   .backlink{display:inline-block; margin-bottom:28px; font-size:13.5px; color:var(--text-muted);}
+  .or-divider{display:flex; align-items:center; gap:12px; margin:18px 0; color:var(--text-muted); font-size:12.5px; text-transform:uppercase;}
+  .or-divider:before, .or-divider:after{content:""; flex:1; height:1px; background:var(--line);}
 </style>
 </head>
 <body>
@@ -65,8 +70,17 @@
       </ul>
     </div>
 
-    <!-- PayPal Payments Standard button. Replace REPLACE_WITH_PAYPAL_EMAIL with the real PCsona
-         PayPal Business account email once it's set up. No API key needed for this button type. -->
+    <div class="icon-row">
+      <svg viewBox="0 0 38 24" class="pm-icon"><rect width="38" height="24" rx="4" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" font-family="Arial" font-style="italic" font-weight="700" font-size="9" fill="#fff">VISA</text></svg>
+      <svg viewBox="0 0 38 24" class="pm-icon"><rect width="38" height="24" rx="4" fill="#F4F4F4"/><circle cx="16" cy="12" r="7" fill="#EB001B"/><circle cx="24" cy="12" r="7" fill="#F79E1B" fill-opacity="0.9"/></svg>
+      <svg viewBox="0 0 38 24" class="pm-icon"><rect width="38" height="24" rx="4" fill="#2E77BC"/><text x="19" y="16" text-anchor="middle" font-family="Arial" font-weight="700" font-size="8" fill="#fff">AMEX</text></svg>
+      <svg viewBox="0 0 38 24" class="pm-icon"><rect width="38" height="24" rx="4" fill="#000"/><text x="19" y="16" text-anchor="middle" font-family="Arial" font-weight="600" font-size="8" fill="#fff">Pay</text></svg>
+      <svg viewBox="0 0 38 24" class="pm-icon"><rect width="38" height="24" rx="4" fill="#00D64F"/><text x="19" y="16" text-anchor="middle" font-family="Arial" font-weight="700" font-size="12" fill="#fff">$</text></svg>
+    </div>
+    <a class="pay pay-card" id="stripe-link" href="#" target="_blank" rel="noopener">Pay with Card — <span id="btn-amount-stripe">$99</span></a>
+    <p class="fine" style="margin-top:10px;">Klarna &amp; Affirm also available at checkout.</p>
+    <div class="or-divider"><span>or</span></div>
+    <!-- PayPal Payments Standard button -->
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form">
       <input type="hidden" name="cmd" value="_xclick">
       <input type="hidden" name="business" value="business@goldlifefitness.com">
@@ -76,9 +90,9 @@
       <input type="hidden" name="no_shipping" value="1">
       <input type="hidden" name="return" id="pp-return" value="https://businessmen37.github.io/thank-you.html?plan=full">
       <input type="hidden" name="cancel_return" value="https://businessmen37.github.io/checkout.html?plan=full">
-      <button type="submit" class="pay">Pay with PayPal — <span id="btn-amount">$99</span></button>
+      <button type="submit" class="pay pay-paypal">Pay with PayPal — <span id="btn-amount">$99</span></button>
     </form>
-    <p class="fine">You'll be taken to PayPal's secure checkout. Cards accepted, no PayPal account required.</p>
+    <p class="fine">You'll be taken to a secure checkout either way. No account required for card payment.</p>
   </div>
 </main>
 
@@ -94,6 +108,7 @@
       amount: '99.00',
       display: '$99',
       itemName: 'PCsona Full Install',
+      stripeUrl: 'https://buy.stripe.com/28EfZh0wd9GA2we3bEcjS00',
       included: [
         'Full assistant install on your PC, pre-trained and ready',
         'Voice, email &amp; calendar setup',
@@ -108,6 +123,7 @@
       amount: '40.00',
       display: '$40',
       itemName: 'PCsona Return Session',
+      stripeUrl: 'https://buy.stripe.com/4gM28r8oF6uo6MueUmcjS01',
       included: [
         'Same PC as your original install',
         'Add new tools or fix an issue',
@@ -120,14 +136,15 @@
   document.getElementById('checkout-title').textContent = p.title;
   document.getElementById('item-label').textContent = p.label;
   document.getElementById('item-desc').textContent = p.desc;
-  document.getElementById('item-amount').textContent = '$' + p.display.replace('$','') + '.00' === '$' + p.amount ? '$' + p.amount : '$' + p.amount;
   document.getElementById('item-amount').textContent = '$' + p.amount;
   document.getElementById('btn-amount').textContent = p.display;
+  document.getElementById('btn-amount-stripe').textContent = p.display;
   document.getElementById('item-included').innerHTML = p.included.map(i => `<li>${i}</li>`).join('');
 
   document.getElementById('pp-item-name').value = p.itemName;
   document.getElementById('pp-amount').value = p.amount;
   document.getElementById('pp-return').value = 'https://businessmen37.github.io/thank-you.html?plan=' + plan;
+  document.getElementById('stripe-link').href = p.stripeUrl;
 </script>
 </body>
 </html>
