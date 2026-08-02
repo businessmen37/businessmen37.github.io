@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>You're booked — PCsona</title>
+<title>You're Booked | PCsona</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,14 +53,14 @@
   <div class="wrap">
     <span class="eyebrow"><span class="dot"></span>order confirmed</span>
     <h1>You're in.</h1>
-    <p class="lead" id="lead-text">Your spot is reserved as one of today's 10 installs. One step left — message us on WhatsApp to lock in your session time.</p>
+    <p class="lead" id="lead-text">Your spot is reserved as one of today's 10 installs. One step left: message us on WhatsApp to lock in your session time.</p>
 
     <a class="btn" id="wa-btn" href="#" target="_blank" rel="noopener">Message on WhatsApp to book your time</a>
-    <p class="fine">A real person replies — usually within the hour.</p>
+    <p class="fine">A real person replies, usually within the hour.</p>
 
     <div class="card">
       <h2>What happens next</h2>
-      <p>Message us your preferred time on WhatsApp. You'll get a short pre-call checklist so your PC is ready to go. Your assistant already comes pre-trained — after your session, you'll also get a short guide on how to use it.</p>
+      <p>Message us your preferred time on WhatsApp. You'll get a short pre-call checklist so your PC is ready to go. Your assistant already comes pre-trained, and after your session, you'll also get a short guide on how to use it.</p>
     </div>
   </div>
 </main>
@@ -69,7 +69,7 @@
   const params = new URLSearchParams(window.location.search);
   const plan = params.get('plan') === 'return' ? 'return' : 'full';
   const planLabel = plan === 'return' ? 'the $40 return session' : 'the $99 full install';
-  const message = `Hi PCsona, I just paid for ${planLabel} — here to book my session time.`;
+  const message = `Hi PCsona, I just paid for ${planLabel}, here to book my session time.`;
   document.getElementById('wa-btn').href = 'https://wa.me/12038962323?text=' + encodeURIComponent(message);
 </script>
 </body>
