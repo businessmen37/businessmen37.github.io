@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — PCsona</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1117; --surface:#161B26; --line:#262E3D;
+    --text:#ECE9E2; --text-muted:#8B93A6; --gold:#E8A63C; --gold-dim:#7A5A26;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--ink); color:var(--text); font-family:'Inter',sans-serif; line-height:1.6; min-height:100vh;}
+  a{color:var(--gold);}
+  .wrap{max-width:520px; margin:0 auto; padding:0 24px;}
+  header{border-bottom:1px solid var(--line); padding:20px 0;}
+  .brand{font-family:'Space Grotesk'; font-weight:700; font-size:19px; display:flex; align-items:center; gap:10px;}
+  .brand img{height:26px; width:26px; display:block;}
+  main{padding:64px 0 96px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); display:inline-block; flex-shrink:0;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px; color:var(--gold); font-size:13px;
+    text-transform:uppercase; padding:6px 14px; border:1px solid var(--gold-dim); border-radius:999px;
+    margin-bottom:22px; font-family:'JetBrains Mono';
+  }
+  h1{font-family:'Space Grotesk'; font-size:30px; margin-bottom:32px;}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:28px; margin-bottom:20px;}
+  .row{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); font-size:15px;}
+  .row:last-child{border-bottom:none;}
+  .row.total{font-family:'Space Grotesk'; font-size:19px; font-weight:700; color:var(--gold);}
+  .row .label{color:var(--text-muted);}
+  ul.included{list-style:none; margin-top:16px;}
+  ul.included li{font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:10px;}
+  ul.included li:before{content:"—"; color:var(--gold);}
+  button.pay{
+    width:100%; padding:16px; border:none; border-radius:999px; background:var(--gold); color:#1A1305;
+    font-size:16px; font-weight:700; cursor:pointer; font-family:'Inter'; margin-top:8px;
+    transition:transform .15s;
+  }
+  button.pay:hover{transform:translateY(-1px);}
+  .fine{font-size:12.5px; color:var(--text-muted); text-align:center; margin-top:16px;}
+  .backlink{display:inline-block; margin-bottom:28px; font-size:13.5px; color:var(--text-muted);}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a href="index.html" class="brand"><img src="assets/logo-transparent.png" alt="PCsona logo">PCsona</a></div></header>
+<main>
+  <div class="wrap">
+    <a href="index.html" class="backlink">&larr; Back to home</a>
+    <span class="eyebrow"><span class="dot"></span>only 10 installs booked per day</span>
+    <h1 id="checkout-title">Complete your booking</h1>
+
+    <div class="card">
+      <div class="row"><span class="label" id="item-label">Full install</span><span id="item-desc">Up to 1 hour, everything included</span></div>
+      <div class="row total"><span>Total</span><span id="item-amount">$99.00</span></div>
+      <ul class="included" id="item-included">
+        <li>Full assistant install on your PC, pre-trained and ready</li>
+        <li>Voice, email &amp; calendar setup</li>
+        <li>A short guide on how to use it, sent after your session</li>
+        <li>Free continuation if we run over scope</li>
+      </ul>
+    </div>
+
+    <!-- PayPal Payments Standard button. Replace REPLACE_WITH_PAYPAL_EMAIL with the real PCsona
+         PayPal Business account email once it's set up. No API key needed for this button type. -->
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form">
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="business@goldlifefitness.com">
+      <input type="hidden" name="item_name" id="pp-item-name" value="PCsona Full Install">
+      <input type="hidden" name="amount" id="pp-amount" value="99.00">
+      <input type="hidden" name="currency_code" value="USD">
+      <input type="hidden" name="no_shipping" value="1">
+      <input type="hidden" name="return" id="pp-return" value="https://businessmen37.github.io/thank-you.html?plan=full">
+      <input type="hidden" name="cancel_return" value="https://businessmen37.github.io/checkout.html?plan=full">
+      <button type="submit" class="pay">Pay with PayPal — <span id="btn-amount">$99</span></button>
+    </form>
+    <p class="fine">You'll be taken to PayPal's secure checkout. Cards accepted, no PayPal account required.</p>
+  </div>
+</main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get('plan') === 'return' ? 'return' : 'full';
+
+  const plans = {
+    full: {
+      title: 'Complete your booking',
+      label: 'Full install',
+      desc: 'Up to 1 hour, everything included',
+      amount: '99.00',
+      display: '$99',
+      itemName: 'PCsona Full Install',
+      included: [
+        'Full assistant install on your PC, pre-trained and ready',
+        'Voice, email &amp; calendar setup',
+        'A short guide on how to use it, sent after your session',
+        'Free continuation if we run over scope'
+      ]
+    },
+    return: {
+      title: 'Complete your return session',
+      label: 'Return session',
+      desc: 'Same PC as your original install',
+      amount: '40.00',
+      display: '$40',
+      itemName: 'PCsona Return Session',
+      included: [
+        'Same PC as your original install',
+        'Add new tools or fix an issue',
+        'Mention your previous order for a discount'
+      ]
+    }
+  };
+
+  const p = plans[plan];
+  document.getElementById('checkout-title').textContent = p.title;
+  document.getElementById('item-label').textContent = p.label;
+  document.getElementById('item-desc').textContent = p.desc;
+  document.getElementById('item-amount').textContent = '$' + p.display.replace('$','') + '.00' === '$' + p.amount ? '$' + p.amount : '$' + p.amount;
+  document.getElementById('item-amount').textContent = '$' + p.amount;
+  document.getElementById('btn-amount').textContent = p.display;
+  document.getElementById('item-included').innerHTML = p.included.map(i => `<li>${i}</li>`).join('');
+
+  document.getElementById('pp-item-name').value = p.itemName;
+  document.getElementById('pp-amount').value = p.amount;
+  document.getElementById('pp-return').value = 'https://businessmen37.github.io/thank-you.html?plan=' + plan;
+</script>
+</body>
+</html>
