@@ -223,7 +223,37 @@
   .guarantee-strip h3{font-size:17px; margin-bottom:6px;}
   .guarantee-strip p{color:var(--text-muted); font-size:14.5px; max-width:560px;}
 
-  /* faq */
+  /* how section layout */
+  .how-head{display:flex; justify-content:space-between; align-items:center; gap:32px; margin-bottom:16px; flex-wrap:wrap;}
+  .how-illustration{width:220px; flex-shrink:0;}
+  @media(max-width:800px){ .how-illustration{display:none;} }
+
+  /* live demo screen */
+  .demo-screen{
+    background:#0A0D14; border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+  .demo-topbar{
+    display:flex; align-items:center; gap:8px; padding:14px 18px; background:var(--surface); border-bottom:1px solid var(--line);
+  }
+  .demo-dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+  .demo-title{margin-left:10px; color:var(--text-muted); font-size:12.5px;}
+  .demo-body{padding:32px; min-height:220px; display:flex; flex-direction:column; gap:14px; justify-content:center;}
+  .demo-bubble{
+    max-width:70%; padding:13px 18px; border-radius:14px; font-size:15px; opacity:0; transform:translateY(8px);
+    animation:bubbleIn .5s ease forwards;
+  }
+  .demo-bubble.user{align-self:flex-end; background:var(--gold); color:#1A1305; border-bottom-right-radius:4px;}
+  .demo-bubble.assistant{align-self:flex-start; background:var(--surface-2); color:var(--text); border:1px solid var(--line); border-bottom-left-radius:4px;}
+  @keyframes bubbleIn{ to{opacity:1; transform:translateY(0);} }
+
+  /* scroll reveal */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    .demo-bubble{animation:none; opacity:1; transform:none;}
+  }
   .faq-item{border-bottom:1px solid var(--line); padding:24px 0;}
   .faq-item h3{font-size:16.5px; margin-bottom:8px;}
   .faq-item p{color:var(--text-muted); font-size:14.5px; max-width:640px;}
@@ -258,6 +288,7 @@
     <a href="#" class="brand"><img src="assets/logo-transparent.png" alt="PCsona logo">PCsona</a>
     <div class="navlinks">
       <a href="#services">Services</a>
+      <a href="#demo">Demo</a>
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
@@ -332,7 +363,7 @@
       <h2>An assistant that actually knows your PC</h2>
       <p>Every install is done live on your machine, so what you get is tuned to how you actually work, not a generic bot.</p>
     </div>
-    <div class="grid">
+    <div class="grid" id="feature-grid">
       <div class="card">
         <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E8A63C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4"/><path d="M8 22h8"/></svg></div>
         <h3>Voice, not typing</h3>
@@ -362,12 +393,40 @@
   </div>
 </section>
 
-<section id="how">
+<section id="demo">
   <div class="wrap">
     <div class="section-head">
-      <span class="kicker">The process</span>
-      <h2>How a session actually goes</h2>
-      <p>Four steps, start to finish. You don't need to know anything technical going in.</p>
+      <span class="kicker">See it in action</span>
+      <h2>This is what talking to it feels like</h2>
+      <p>A real exchange, the kind you'd have on day one. It plays on a loop, this is what's running on your screen once it's installed.</p>
+    </div>
+    <div class="demo-screen">
+      <div class="demo-topbar"><span class="demo-dot" style="background:#FF5F57"></span><span class="demo-dot" style="background:#FEBC2E"></span><span class="demo-dot" style="background:#28C840"></span><span class="demo-title mono">PCsona, listening</span></div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="how-head">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="kicker">The process</span>
+        <h2>How a session actually goes</h2>
+        <p>Four steps, start to finish. You don't need to know anything technical going in.</p>
+      </div>
+      <svg class="how-illustration" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="16" width="120" height="80" rx="8" fill="#161B26" stroke="#E8A63C" stroke-opacity="0.35"/>
+        <rect x="30" y="26" width="100" height="60" rx="4" fill="#0D1117"/>
+        <circle cx="80" cy="56" r="18" fill="none" stroke="#8B93A6" stroke-opacity="0.5" stroke-width="2"/>
+        <circle cx="80" cy="56" r="7" fill="#E8A63C" class="float-dot"/>
+        <rect x="65" y="96" width="30" height="10" fill="#161B26"/>
+        <rect x="45" y="106" width="70" height="8" rx="4" fill="#161B26"/>
+        <circle cx="165" cy="100" r="16" fill="#8B93A6" fill-opacity="0.5"/>
+        <path d="M140 150c2-20 14-32 25-32s23 12 25 32z" fill="#8B93A6" fill-opacity="0.5"/>
+        <path d="M145 88 Q 115 40 145 40" stroke="#E8A63C" stroke-opacity="0.4" stroke-width="2" fill="none" stroke-dasharray="3 5"/>
+        <circle cx="145" cy="40" r="4" fill="#E8A63C" class="float-dot" style="animation-delay:.5s"/>
+      </svg>
     </div>
     <div class="steps">
       <div class="step">
@@ -506,6 +565,54 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Scroll-reveal: fade/slide in cards, steps, and key blocks as they enter view
+  const revealTargets = document.querySelectorAll(
+    '.card, .step, .price-card, .faq-item, .guarantee-strip, .contact-box, .demo-screen'
+  );
+  revealTargets.forEach(el => el.classList.add('reveal'));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealTargets.forEach(el => io.observe(el));
+
+  // Looping live demo conversation
+  const exchanges = [
+    [
+      { who: 'user', text: "Hey, what's on my calendar today?" },
+      { who: 'assistant', text: "You've got 3 things: a 10am call, lunch at noon, and a dentist appointment at 4." }
+    ],
+    [
+      { who: 'user', text: 'Remind me to call mom tonight.' },
+      { who: 'assistant', text: "Got it, I'll remind you at 7pm." }
+    ],
+    [
+      { who: 'user', text: 'Find that invoice from last week.' },
+      { who: 'assistant', text: 'Found it, opening invoice_0512.pdf now.' }
+    ]
+  ];
+  const demoBody = document.getElementById('demo-body');
+  let ei = 0;
+  function playExchange() {
+    if (!demoBody) return;
+    demoBody.innerHTML = '';
+    const pair = exchanges[ei % exchanges.length];
+    pair.forEach((msg, i) => {
+      const b = document.createElement('div');
+      b.className = 'demo-bubble ' + msg.who;
+      b.textContent = msg.text;
+      b.style.animationDelay = (i * 0.9) + 's';
+      demoBody.appendChild(b);
+    });
+    ei++;
+  }
+  playExchange();
+  setInterval(playExchange, 4200);
 </script>
 </body>
 </html>
