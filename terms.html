@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — PCsona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1117; --surface:#161B26; --line:#262E3D;
+    --text:#ECE9E2; --text-muted:#8B93A6; --gold:#E8A63C; --gold-dim:#7A5A26;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--ink); color:var(--text); font-family:'Inter',sans-serif; line-height:1.7;}
+  a{color:var(--gold);}
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+  header{border-bottom:1px solid var(--line); padding:20px 0;}
+  .brand{font-family:'Space Grotesk'; font-weight:700; font-size:19px; display:flex; align-items:center; gap:10px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); display:inline-block;}
+  main{padding:64px 0 96px;}
+  h1{font-family:'Space Grotesk'; font-size:34px; margin-bottom:8px;}
+  .updated{font-family:'JetBrains Mono'; font-size:13px; color:var(--text-muted); margin-bottom:48px; display:block;}
+  h2{font-family:'Space Grotesk'; font-size:19px; margin:36px 0 12px;}
+  p, li{color:var(--text-muted); font-size:15px; margin-bottom:12px;}
+  ul{padding-left:20px;}
+  footer{border-top:1px solid var(--line); padding:28px 0; font-size:13.5px; color:var(--text-muted);}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a href="index.html" class="brand"><span class="dot"></span>PCsona</a></div></header>
+<main>
+  <div class="wrap">
+    <h1>Terms of Service</h1>
+    <span class="updated mono">Last updated: [add date before publishing]</span>
+
+    <p>These Terms of Service ("Terms") govern your use of PCsona's personal assistant installation service ("Service"), operated by PCsona ("we," "us," "our"). By booking or receiving a session, you agree to these Terms.</p>
+
+    <h2>1. The Service</h2>
+    <p>PCsona provides a done-for-you installation of a personal AI assistant on your own computer, delivered live by a technician over a remote-desktop connection. The Service is performed on your device, using your own accounts and credentials.</p>
+
+    <h2>2. Booking and Payment</h2>
+    <ul>
+      <li>The standard full install session is $99 and covers up to one hour.</li>
+      <li>A return session on the same PC as your original install is $40.</li>
+      <li>A new or different PC, including for existing customers, is billed at the full $99 rate.</li>
+      <li>If a session runs past its scheduled time due to unfinished original scope, the continuation session is provided at no additional charge.</li>
+      <li>Payment is collected in advance of your scheduled session unless otherwise agreed.</li>
+    </ul>
+
+    <h2>3. Remote Access</h2>
+    <p>You will be asked to grant temporary remote-desktop access to your computer for the duration of the session. You may revoke this access at any time. PCsona does not retain access to your device after the session ends.</p>
+
+    <h2>4. Your Responsibilities</h2>
+    <ul>
+      <li>You confirm you are the owner or authorized user of the device being worked on.</li>
+      <li>You are responsible for maintaining a stable internet connection and a working device for the session.</li>
+      <li>You are responsible for the accounts and credentials you choose to connect (e.g., email, calendar, social platforms).</li>
+    </ul>
+
+    <h2>5. No Warranty</h2>
+    <p>The Service is provided on an as-is basis. While we aim for a fully working assistant at the end of every session, we do not guarantee compatibility with every device, account, or third-party platform, and third-party services (such as email providers or social platforms) may change their own access rules at any time.</p>
+
+    <h2>6. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by law, PCsona is not liable for indirect, incidental, or consequential damages arising from use of the Service, including data loss, except where caused by our gross negligence.</p>
+
+    <h2>7. Cancellations</h2>
+    <p>Sessions may be rescheduled by contacting us in advance of your booked time. Refund requests are handled on a case-by-case basis.</p>
+
+    <h2>8. Changes to These Terms</h2>
+    <p>We may update these Terms from time to time. Continued use of the Service after changes are posted constitutes acceptance of the updated Terms.</p>
+
+    <h2>9. Contact</h2>
+    <p>Questions about these Terms can be sent to <a href="mailto:info@pcsona.com">info@pcsona.com</a>.</p>
+
+    <p style="margin-top:40px; font-size:13px;">This page is a general template and has not been reviewed by an attorney. Consider having it reviewed by a licensed attorney in your jurisdiction before relying on it.</p>
+  </div>
+</main>
+<footer><div class="wrap">© <span id="year"></span> PCsona. <a href="index.html" style="color:inherit;">Back to home</a></div></footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

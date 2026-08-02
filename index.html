@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCsona — Your PC, With a Mind of Its Own</title>
+<meta name="description" content="PCsona installs your own personal AI assistant on your PC, live, in one session. Voice control, smart automation, done for you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1117;
+    --surface:#161B26;
+    --surface-2:#1D2432;
+    --line:#262E3D;
+    --text:#ECE9E2;
+    --text-muted:#8B93A6;
+    --gold:#E8A63C;
+    --gold-dim:#7A5A26;
+    --teal:#3FD1C4;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 24px;}
+  section{padding:96px 0;}
+  @media (max-width:640px){ section{padding:64px 0;} }
+
+  /* status dot signature */
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 0 rgba(232,166,60,0.5);
+    animation:pulse 2.4s infinite;
+    display:inline-block;
+    flex-shrink:0;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(232,166,60,0.45);}
+    70%{box-shadow:0 0 0 9px rgba(232,166,60,0);}
+    100%{box-shadow:0 0 0 0 rgba(232,166,60,0);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .dot{animation:none;}
+    *{scroll-behavior:auto !important;}
+  }
+
+  /* nav */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(13,17,23,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px; max-width:1100px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:19px;}
+  .navlinks{display:flex; gap:32px; align-items:center;}
+  .navlinks a{color:var(--text-muted); font-size:14.5px; transition:color .15s;}
+  .navlinks a:hover{color:var(--text);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px; border-radius:999px;
+    font-size:14.5px; font-weight:600;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .btn-gold{background:var(--gold); color:#1A1305;}
+  .btn-gold:hover{transform:translateY(-1px); box-shadow:0 8px 24px rgba(232,166,60,0.25);}
+  .btn-ghost{border:1px solid var(--line); color:var(--text);}
+  .btn-ghost:hover{border-color:var(--gold-dim);}
+  .navcta{display:none;}
+  @media(min-width:720px){ .navcta{display:inline-flex;} .navlinks{display:flex;} }
+  @media(max-width:719px){ .navlinks{display:none;} }
+
+  /* hero */
+  .hero{padding:120px 0 80px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    color:var(--gold); font-size:13px; text-transform:uppercase;
+    padding:6px 14px; border:1px solid var(--gold-dim); border-radius:999px;
+    margin-bottom:28px;
+  }
+  .hero h1{
+    font-size:clamp(38px, 6vw, 66px);
+    line-height:1.05;
+    max-width:820px;
+    margin-bottom:24px;
+  }
+  .hero h1 .accent{color:var(--gold);}
+  .hero p.lead{
+    font-size:18px; color:var(--text-muted); max-width:560px; margin-bottom:36px;
+  }
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+  .hero-note{margin-top:20px; font-size:13.5px; color:var(--text-muted);}
+
+  /* status line */
+  .status-line{
+    margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+    display:flex; gap:36px; flex-wrap:wrap; font-size:13px; color:var(--text-muted);
+  }
+  .status-line span.mono{color:var(--text);}
+
+  /* section headers */
+  .section-head{max-width:600px; margin-bottom:56px;}
+  .kicker{font-size:13px; color:var(--gold); text-transform:uppercase; margin-bottom:12px; display:block;}
+  .section-head h2{font-size:clamp(28px,4vw,38px); margin-bottom:14px;}
+  .section-head p{color:var(--text-muted); font-size:16px;}
+
+  /* feature grid */
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:28px;
+  }
+  .card h3{font-size:18px; margin-bottom:10px;}
+  .card p{color:var(--text-muted); font-size:14.5px;}
+  .card .num{font-family:'JetBrains Mono'; color:var(--gold); font-size:13px; display:block; margin-bottom:14px;}
+
+  /* how it works */
+  .steps{counter-reset:step; display:flex; flex-direction:column; gap:0;}
+  .step{
+    display:grid; grid-template-columns:56px 1fr; gap:20px;
+    padding:28px 0; border-bottom:1px solid var(--line);
+  }
+  .step:last-child{border-bottom:none;}
+  .step-num{
+    font-family:'JetBrains Mono'; color:var(--gold); font-size:15px;
+    border:1px solid var(--gold-dim); border-radius:50%;
+    width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  }
+  .step h3{font-size:17px; margin-bottom:6px;}
+  .step p{color:var(--text-muted); font-size:14.5px; max-width:520px;}
+
+  /* pricing */
+  .pricing-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px;}
+  .price-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px; display:flex; flex-direction:column;
+  }
+  .price-card.featured{border-color:var(--gold-dim); background:linear-gradient(180deg, var(--surface-2), var(--surface));}
+  .price-tag-label{font-size:13px; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;}
+  .price-amount{font-family:'Space Grotesk'; font-size:44px; font-weight:700; margin-bottom:4px;}
+  .price-amount span{font-size:16px; color:var(--text-muted); font-weight:500;}
+  .price-desc{color:var(--text-muted); font-size:14.5px; margin-bottom:24px;}
+  .price-list{list-style:none; margin-bottom:28px; flex-grow:1;}
+  .price-list li{
+    font-size:14.5px; padding:9px 0; border-top:1px solid var(--line);
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .price-list li:first-child{border-top:none;}
+  .price-list li:before{content:"—"; color:var(--gold);}
+  .price-note{
+    margin-top:28px; padding:18px 20px; border:1px dashed var(--line); border-radius:10px;
+    font-size:13.5px; color:var(--text-muted);
+  }
+
+  /* faq */
+  .faq-item{border-bottom:1px solid var(--line); padding:24px 0;}
+  .faq-item h3{font-size:16.5px; margin-bottom:8px;}
+  .faq-item p{color:var(--text-muted); font-size:14.5px; max-width:640px;}
+
+  /* contact */
+  .contact-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:48px; display:flex; flex-wrap:wrap; gap:40px; justify-content:space-between; align-items:center;
+  }
+  .contact-box h2{font-size:28px; margin-bottom:10px; max-width:420px;}
+  .contact-box p{color:var(--text-muted); max-width:420px;}
+  .contact-actions{display:flex; flex-direction:column; gap:12px; min-width:220px;}
+  .contact-actions a{font-size:14.5px;}
+  .contact-line{display:flex; align-items:center; gap:10px; color:var(--text-muted); font-size:14px;}
+
+  footer{border-top:1px solid var(--line); padding:36px 0; }
+  .foot-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; font-size:13.5px; color:var(--text-muted);}
+  .foot-row a{color:var(--text-muted);}
+  .foot-row a:hover{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="brand"><span class="dot"></span>PCsona</a>
+    <div class="navlinks">
+      <a href="#services">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-gold navcta" href="#pricing">Book my install</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow mono"><span class="dot"></span>status: ready when you are</span>
+    <h1>Your PC, with <span class="accent">a mind of its own.</span></h1>
+    <p class="lead">PCsona is a personal AI assistant, installed on your own computer, by a real person, in one live session. Not a download. Not a subscription bot. Yours.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#pricing">Get PCsona — $99</a>
+      <a class="btn btn-ghost" href="#how">See how it works</a>
+    </div>
+    <p class="hero-note">One session. Your own hardware. No account handed off, no third party installer.</p>
+
+    <div class="status-line">
+      <div>Setup time <br><span class="mono">up to 60 min</span></div>
+      <div>Delivered by <br><span class="mono">a person, on your screen</span></div>
+      <div>Runs on <br><span class="mono">your PC, your accounts</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">What you get</span>
+      <h2>An assistant that actually knows your PC</h2>
+      <p>Every install is done live on your machine — so what you get is tuned to how you actually work, not a generic bot.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <span class="num mono">01</span>
+        <h3>Voice, not typing</h3>
+        <p>Talk to your PC and get a real answer back — wake word, natural conversation, no clicking through menus.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">02</span>
+        <h3>Connected to your day</h3>
+        <p>Email, calendar, reminders, and the accounts you actually use — wired in during your session, under your login.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">03</span>
+        <h3>Built for your workflow</h3>
+        <p>Tell me what slows you down and I add it live — file search, quick notes, price lookups, whatever you need daily.</p>
+      </div>
+      <div class="card">
+        <span class="num mono">04</span>
+        <h3>You keep full control</h3>
+        <p>It runs locally on your machine under your own accounts. Nothing is handed over to a third-party platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">The process</span>
+      <h2>How a session actually goes</h2>
+      <p>Four steps, start to finish — you don't need to know anything technical going in.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num mono">1</div>
+        <div>
+          <h3>Fill out the quick tools checklist</h3>
+          <p>A short form on what you use day to day. It shapes exactly what gets built into your session.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num mono">2</div>
+        <div>
+          <h3>Book your session on WhatsApp</h3>
+          <p>Message us to lock in a time. You'll get a short pre-call checklist so your PC is ready to go.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num mono">3</div>
+        <div>
+          <h3>I connect and build it live</h3>
+          <p>Via remote desktop, on camera the whole time — you watch it come together on your own screen.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num mono">4</div>
+        <div>
+          <h3>Walk away with your own assistant</h3>
+          <p>Fully working, addressing you the way you want, running on your PC. It's yours from that point on.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Pricing</span>
+      <h2>One flat rate. No add-ons.</h2>
+      <p>Everything is included in the install — you're not charged extra per feature.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card featured">
+        <span class="price-tag-label mono">Full install</span>
+        <div class="price-amount">$99<span>/ session</span></div>
+        <p class="price-desc">Up to 1 hour, everything included — this is the one almost everyone books.</p>
+        <ul class="price-list">
+          <li>Full assistant install on your PC</li>
+          <li>Voice, email &amp; calendar setup</li>
+          <li>Built around your own tools checklist</li>
+          <li>Free continuation if we run over scope</li>
+        </ul>
+        <a class="btn btn-gold" href="https://wa.me/12038962323?text=Hi%20PCsona%2C%20I%27d%20like%20to%20book%20the%20%2499%20full%20install." target="_blank" rel="noopener">Book on WhatsApp</a>
+      </div>
+      <div class="price-card">
+        <span class="price-tag-label mono">Return session</span>
+        <div class="price-amount">$40<span>/ session</span></div>
+        <p class="price-desc">Already have PCsona installed on this same PC? Add features or tune things up.</p>
+        <ul class="price-list">
+          <li>Same PC as your original install</li>
+          <li>Add new tools or fix an issue</li>
+          <li>Mention your previous order for a discount</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/12038962323?text=Hi%20PCsona%2C%20I%27d%20like%20to%20book%20a%20%2440%20return%20session." target="_blank" rel="noopener">Book on WhatsApp</a>
+      </div>
+    </div>
+    <p class="price-note mono">Note — a new or different PC, even for existing customers, is billed as a full $99 install.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">FAQ</span>
+      <h2>Good to know before you book</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>Do I need to buy any software first?</h3>
+        <p>No. Everything needed is set up live during your session — you don't need to install or buy anything beforehand.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is my data safe during the session?</h3>
+        <p>The install happens on your own PC, under your own accounts, over a standard remote-desktop connection you can end at any time.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What if my session runs long?</h3>
+        <p>If we haven't finished everything from your original scope, the continuation is free — you're never charged extra to finish what we started.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What do I need on my end?</h3>
+        <p>A working PC and a stable internet connection. You'll get a short pre-call checklist after booking so nothing's a surprise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-box">
+      <div>
+        <h2>Ready when you are.</h2>
+        <p>Message us on WhatsApp to book, or reach out by email — a real person answers, always.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn btn-gold" href="https://wa.me/12038962323?text=Hi%20PCsona%2C%20I%27d%20like%20to%20book%20a%20session." target="_blank" rel="noopener">Message on WhatsApp</a>
+        <div class="contact-line"><span class="dot"></span><span class="mono">+1 203 896 2323</span></div>
+        <div class="contact-line"><span class="dot"></span><span class="mono">info@pcsona.com</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© <span id="year"></span> PCsona. All rights reserved.</span>
+    <div style="display:flex; gap:24px;">
+      <a href="terms.html">Terms of Service</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
